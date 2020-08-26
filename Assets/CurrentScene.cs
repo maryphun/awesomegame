@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class CurrentScene : Singleton<CurrentScene>
@@ -67,5 +68,25 @@ public class CurrentScene : Singleton<CurrentScene>
         }
 
         return targetFood;
+    }
+
+    public Transform GetNearestPartner(Vector2 position)
+    {
+        Transform targetPartner = null;
+        float CompareDistance = 10000f;
+
+        foreach(Transform cell in cellList)
+        {
+            if(cell.gameObject.GetComponent<CellAI>().status == AI.Status.love)
+            {
+                float newDistance = Vector2.Distance(cell.transform.position, position);
+                if (newDistance <= CompareDistance)
+                {
+                    targetPartner = cell;
+                }
+            }
+        }
+
+        return targetPartner;
     }
 }
