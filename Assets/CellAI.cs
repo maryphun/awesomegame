@@ -418,5 +418,22 @@ public class CellAI : MonoBehaviour
             return;
         }
 
+        FindLove();
+        return;
+    }
+
+    private void FindLove()
+    {
+        Transform targetLove;
+        status = AI.Status.love;
+        targetLove = CurrentScene.Instance().GetNearestPartner(transform.position);
+        if (targetLove == null)
+        {
+            status = AI.Status.wander;
+            return;
+        }
+
+        moveTarget = true;
+        moveTargetPos = targetLove.position;
     }
 }
