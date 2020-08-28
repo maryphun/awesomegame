@@ -7,7 +7,7 @@ public class Food : MonoBehaviour
     [SerializeField] private float lastingTime = 4.0f;
     [SerializeField] private SpriteRenderer renderer;
     [SerializeField] private SpriteRenderer shadowRenderer;
-
+    [SerializeField] private float energyContain = 0.25f;
 
     private void Start()
     {
@@ -36,7 +36,7 @@ public class Food : MonoBehaviour
                 shadowRenderer.color = tmp;
             }
 
-
+            // count to destroy
             if (lastingTime <= 0.0f)
             {
                 CurrentScene.Instance().UnregisterFood(transform);
@@ -45,9 +45,14 @@ public class Food : MonoBehaviour
         }
     }
 
-    public void Consume()
+    /// <summary>
+    /// Return the energy given
+    /// </summary>
+    public float Consume()
     {
         CurrentScene.Instance().UnregisterFood(transform);
         Destroy(gameObject);
+
+        return energyContain;
     }
 }

@@ -17,6 +17,10 @@ public class CellAI : MonoBehaviour
     [SerializeField] private float shakeMagnitude = 0.01f;
     [SerializeField] private float hungerIncreaseRate = 0.05f;
     [SerializeField, Range(0.01f, 10.0f)] private float moveSpeed = 2f;
+    [Header("Growth System")]
+    [SerializeField] private float startScale = 0.2f;
+    [SerializeField] private float maxScale = 2.0f;
+
 
     private float height;   // the higher the height, the smaller the shadow
     private Transform cell;
@@ -36,6 +40,7 @@ public class CellAI : MonoBehaviour
     private float bounce;
     private float bounceCnt;
     private bool bounceFlag;
+    private float currentScale;
 
     [Header("Reference")]
     public GameObject spirit;
@@ -60,6 +65,9 @@ public class CellAI : MonoBehaviour
         bounceFlag = true;
         hunger = 0.0f;
         status = AI.Status.wander;
+        currentScale = startScale;
+
+        transform.DOScale(currentScale, 0.0f);
     }
 
     // Update is called once per frame
@@ -315,6 +323,8 @@ public class CellAI : MonoBehaviour
 
     private void DrawSpirit()
     {
+        // function that move the ghost when this blob is dead.
+        // Destroy this gameObject after its done
         spirit.transform.position = new Vector2(spirit.transform.position.x, spirit.transform.position.y + 0.01f);
         var tmp = spirit.GetComponent<SpriteRenderer>().color;
 
@@ -335,11 +345,13 @@ public class CellAI : MonoBehaviour
 
     private void UpdateSorting(SpriteRenderer targetrenderer)
     {
+        // update the SortingLayer base on its Y position.
         targetrenderer.sortingOrder = -(int)(transform.position.y * 100);
     }
 
     public void Initiate(float h, float distanceY, Transform cellTrans)
     {
+        //Initialization when this blob got spawned by a mouse.
         height = h;
         velocity.y = -0.5f;
         isJump = true;

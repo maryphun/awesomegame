@@ -57,6 +57,14 @@ public class PlayerControl : MonoBehaviour
         { 
             Debug.Log("CellAI Script isn't attached in new spawned blob! It will not function.");
         }
+
+        // Temporary
+        ChangeClickMode(ClickMode.food);
+    }
+
+    public void ChangeClickMode(ClickMode newMode)
+    {
+        clickmode = newMode;
     }
 
     private void ShowText()

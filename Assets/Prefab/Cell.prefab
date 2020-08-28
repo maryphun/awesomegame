@@ -52,6 +52,8 @@ MonoBehaviour:
   shakeMagnitude: 0.01
   hungerIncreaseRate: 0.05
   moveSpeed: 4
+  startScale: 0.5
+  maxScale: 2
   spirit: {fileID: 7049314248970598125, guid: 56b65fbd0cb3c254e8113353adca34f0, type: 3}
   hunger: 0
 --- !u!1 &5416354793517113680

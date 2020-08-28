@@ -1021,7 +1021,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Click to spawn a new blob!
+  m_text: Click to spawn a blob!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 08c2d043931277a40bb08a628e48ed18, type: 2}
   m_sharedMaterial: {fileID: -3294198771007839853, guid: 08c2d043931277a40bb08a628e48ed18, type: 2}
