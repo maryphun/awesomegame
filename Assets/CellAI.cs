@@ -34,7 +34,7 @@ public class CellAI : MonoBehaviour
     private Vector2 velocity;
     private bool isJump;
     private Vector3 shake;
-    private AI.Status status;
+    public AI.Status status;
     private Vector2 moveDirection;
     private Transform targetFood;
     private float bounce;
@@ -138,7 +138,7 @@ public class CellAI : MonoBehaviour
         if (hunger > searchForFoodHunger)
         {
             actualWaitTime = Mathf.Clamp(waitTime - (waitTime * hunger), 0.15f, waitTime);
-        }
+        }   
 
         yield return new WaitForSeconds(actualWaitTime);
 
@@ -360,6 +360,7 @@ public class CellAI : MonoBehaviour
         if (cellTrans != null)
         {
             cellTrans.position = new Vector2(cellTrans.position.x, cellTrans.position.y + distanceY);
+            CurrentScene.Instance().RegisterNewCell(cellTrans);
         }
         else
         {
