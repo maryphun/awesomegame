@@ -366,5 +366,8 @@ public class CellAI : MonoBehaviour
         {
             Debug.Log("Can't find cell");
         }
+
+        //Register this cell into the list
+        CurrentScene.Instance().RegisterNewCell(transform);
     }
 }
