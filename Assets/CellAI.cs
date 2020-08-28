@@ -192,7 +192,6 @@ public class CellAI : MonoBehaviour
             {
                 if (Vector2.Distance(moveTargetPos, transform.position) <= moveSpeed * Time.deltaTime)
                 {
-                    Debug.Log("move to target");
                     transform.DOMove(moveTargetPos, Time.deltaTime);
                     moved = true;
                 }
@@ -218,10 +217,7 @@ public class CellAI : MonoBehaviour
         moveTarget = false; 
         status = AI.Status.wander;
 
-        if (hunger > searchForFoodHunger)
-        {
-            FindFood();
-        }
+        StatesUpdate();
 
         switch (status)
         {
@@ -305,7 +301,7 @@ public class CellAI : MonoBehaviour
     {
         if (targetFood != null)
         {
-            targetFood.GetComponent<Food>().Consume();
+            GrowStart(targetFood.GetComponent<Food>().Consume());
             hunger = 0.0f;
         }
 
@@ -378,6 +374,18 @@ public class CellAI : MonoBehaviour
         targetrenderer.sortingOrder = -(int)(transform.position.y * 100);
     }
 
+    private void GrowStart(float energyGained)
+    {
+        float targetScale = Mathf.Clamp(transform.localScale.x + energyGained, startScale, maxScale);
+        
+        if (GetComponent<ResizeTransformOverTime>() == null)
+        {
+            gameObject.AddComponent<ResizeTransformOverTime>();
+        }
+
+        GetComponent<ResizeTransformOverTime>().Constructor(0.5f, transform.localScale.x, targetScale, transform);
+    }
+
     public void Initiate(float h, float distanceY, Transform cellTrans)
     {
         //Initialization when this blob got spawned by a mouse.
@@ -396,5 +404,19 @@ public class CellAI : MonoBehaviour
         {
             Debug.Log("Can't find cell");
         }
+    }
+
+    /// <summary>
+    /// function that decide the cell's states
+    /// </summary>
+    public void StatesUpdate()
+    {
+        // If the cell is hungry
+        if (hunger > searchForFoodHunger)
+        {
+            FindFood();
+            return;
+        }
+
     }
 }
