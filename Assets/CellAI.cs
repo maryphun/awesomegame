@@ -348,6 +348,7 @@ public class CellAI : MonoBehaviour
         if (cellTrans != null)
         {
             cellTrans.position = new Vector2(cellTrans.position.x, cellTrans.position.y + distanceY);
+            CurrentScene.Instance().RegisterNewCell(cellTrans);
         }
         else
         {
