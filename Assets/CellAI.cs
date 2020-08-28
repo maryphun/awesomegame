@@ -41,6 +41,8 @@ public class CellAI : MonoBehaviour
     private float bounceCnt;
     private bool bounceFlag;
     private float currentScale;
+    private bool moveTarget;    // true if the blob have a specific moving target
+    private Vector2 moveTargetPos;  // only used if moveTarget is true
 
     [Header("Reference")]
     public GameObject spirit;
@@ -181,10 +183,25 @@ public class CellAI : MonoBehaviour
         newPos += moveDirection * moveSpeed * Time.deltaTime;
 
         SetFlip(moveDirection.x);
-
-        if (CurrentScene.Instance().GetCollider().ClosestPoint(newPos) == newPos)
+        
+        if (CurrentScene.Instance().GetCollider().ClosestPoint(newPos) == newPos) // check if it's in the green circle.
         {
-            transform.DOMove(newPos, Time.deltaTime);
+            bool moved = false;
+
+            if (moveTarget)
+            {
+                if (Vector2.Distance(moveTargetPos, transform.position) <= moveSpeed * Time.deltaTime)
+                {
+                    Debug.Log("move to target");
+                    transform.DOMove(moveTargetPos, Time.deltaTime);
+                    moved = true;
+                }
+            }
+            
+            if (!moved)
+            {
+                transform.DOMove(newPos, Time.deltaTime);
+            }
         }
         else
         {
@@ -196,6 +213,9 @@ public class CellAI : MonoBehaviour
     private bool SearchForPath()
     {
         bool rtn = false;
+
+        //default stats
+        moveTarget = false; 
         status = AI.Status.wander;
 
         if (hunger > searchForFoodHunger)
@@ -212,11 +232,14 @@ public class CellAI : MonoBehaviour
 
             case AI.Status.chase:
                 moveDirection = (targetFood.position - transform.position).normalized;
+                moveTarget = true;  // set move target to true if the cell have a specific move point
+                moveTargetPos = targetFood.position;
                 rtn = true;
                 break;
 
             case AI.Status.wander:
                 moveDirection = Random.insideUnitCircle;
+                moveTarget = false;
                 rtn = true;
                 break;
 
@@ -270,6 +293,9 @@ public class CellAI : MonoBehaviour
         shadowRenderer.color = tmp;
     }
 
+    /// <summary>
+    /// Return true if this cell should be dead. The higher the hunger is, the higher the chance it will return true.
+    /// </summary>
     private bool StarveToDeath()
     {
         return (Random.Range(1.0f, 2.0f) >= hunger);
@@ -286,6 +312,9 @@ public class CellAI : MonoBehaviour
         Actions();
     }
 
+    /// <summary>
+    /// Set facing of the cell determined by its x movement
+    /// </summary>
     private void SetFlip(float x)
     {
         if (x > 0 && cellRenderer.flipX == false)
@@ -357,6 +386,7 @@ public class CellAI : MonoBehaviour
         isJump = true;
         UpdateShadow();
 
+        //Register this cell into the list
         if (cellTrans != null)
         {
             cellTrans.position = new Vector2(cellTrans.position.x, cellTrans.position.y + distanceY);
@@ -366,8 +396,5 @@ public class CellAI : MonoBehaviour
         {
             Debug.Log("Can't find cell");
         }
-
-        //Register this cell into the list
-        CurrentScene.Instance().RegisterNewCell(transform);
     }
 }
